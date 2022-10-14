@@ -23,9 +23,16 @@ async function run() {
     const pranCollection = client
       .db("personal-inventory")
       .collection("pran-products");
+    const saCollection = client
+      .db("personal-inventory")
+      .collection("sa-group");
 
     app.get("/pranGroup", async (req, res) => {
       const result = await pranCollection.find().toArray()
+      res.send(result);
+    });
+    app.get("/saGroup", async (req, res) => {
+      const result = await saCollection.find().toArray()
       res.send(result);
     });
   } finally {
