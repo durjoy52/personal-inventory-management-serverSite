@@ -1,7 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 require('dotenv').config()
-const { MongoClient, ServerApiVersion } = require("mongodb");
+const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const app = express();
 const port = process.env.PORT || 5000;
 
@@ -20,19 +20,20 @@ async function run() {
   try {
     await client.connect();
 
-    const pranCollection = client
+    const productCollection = client
       .db("personal-inventory")
-      .collection("pran-products");
-    const saCollection = client
-      .db("personal-inventory")
-      .collection("sa-group");
+      .collection("products");
 
-    app.get("/pranGroup", async (req, res) => {
-      const result = await pranCollection.find().toArray()
+    app.get("/products/:group", async (req, res) => {
+      const group = req.params.group
+      const filter = {group:group}
+      const result = await productCollection.find(filter).toArray()
       res.send(result);
     });
-    app.get("/saGroup", async (req, res) => {
-      const result = await saCollection.find().toArray()
+    app.get("/product/:id", async (req, res) => {
+     const id = req.params.id
+     const filter = {_id:ObjectId(id)}
+     const result = await productCollection.findOne(filter)
       res.send(result);
     });
   } finally {
