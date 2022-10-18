@@ -1,6 +1,6 @@
 const express = require("express");
 const cors = require("cors");
-require('dotenv').config()
+require("dotenv").config();
 const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const app = express();
 const port = process.env.PORT || 5000;
@@ -25,15 +25,25 @@ async function run() {
       .collection("products");
 
     app.get("/products/:group", async (req, res) => {
-      const group = req.params.group
-      const filter = {group:group}
-      const result = await productCollection.find(filter).toArray()
+      const group = req.params.group;
+      const filter = { group: group };
+      const result = await productCollection.find(filter).toArray();
       res.send(result);
     });
     app.get("/product/:id", async (req, res) => {
-     const id = req.params.id
-     const filter = {_id:ObjectId(id)}
-     const result = await productCollection.findOne(filter)
+      const id = req.params.id;
+      const filter = { _id: ObjectId(id) };
+      const result = await productCollection.findOne(filter);
+      res.send(result);
+    });
+    app.patch("/product/:id", async (req, res) => {
+      const id = req.params.id;
+      const details = req.body;
+      const filter = { _id: ObjectId(id) };
+      const updatedDoc = {
+        $set: details
+      }
+      const result = await productCollection.updateOne(filter,updatedDoc);
       res.send(result);
     });
   } finally {
