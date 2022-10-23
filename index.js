@@ -30,6 +30,10 @@ async function run() {
       const result = await productCollection.find(filter).toArray();
       res.send(result);
     });
+    app.get("/products", async (req, res) => {
+      const result = await productCollection.find().toArray();
+      res.send(result);
+    });
     app.get("/product/:id", async (req, res) => {
       const id = req.params.id;
       const filter = { _id: ObjectId(id) };
@@ -51,6 +55,12 @@ async function run() {
       const result = await productCollection.updateOne(filter,updatedDoc);
       res.send(result);
     });
+    app.delete("/product/:id",async(req,res)=>{
+      const id = req.params.id;
+      const filter = {_id:ObjectId(id)}
+      const result = await productCollection.deleteOne(filter)
+      res.send(result)
+    })
   } finally {
   }
 }
